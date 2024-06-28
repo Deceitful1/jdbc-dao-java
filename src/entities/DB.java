@@ -1,3 +1,5 @@
+package entities;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,11 +15,13 @@ public class DB
         if (conn == null) {
             Properties prop = loadProperties();
             String url = prop.getProperty("dburl");
+
             try {
                 conn = DriverManager.getConnection(url, prop);
             } catch (SQLException e) {
-                throw new RuntimeException(e.getMessage());
+                throw new RuntimeException(e);
             }
+
         }
         return conn;
     }
@@ -29,42 +33,39 @@ public class DB
                 conn.close();
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public static void closeStatement(Statement st)
-    {
-        try {
-            if (!st.isClosed())
-            {
-                st.close();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public static void closeResultSet(ResultSet rs)
-    {
-        try {
-            if (!rs.isClosed())
-            {
-                rs.close();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new Dbexception(e.getMessage());
         }
     }
 
+    public static void closeStatement(Statement stat)
+    {
+        try {
+            if (!stat.isClosed()) {
+                stat.close();
+            }
+        } catch (SQLException e) {
+            throw new Dbexception(e.getMessage());
+        }
+    }
+
+    public static void closeResultSet(ResultSet rs)
+    {
+        try {
+            if (!rs.isClosed()) {
+                rs.close();
+            }
+        } catch (SQLException e) {
+            throw new Dbexception(e.getMessage());
+        }
+    }
 
 
     public static Properties loadProperties()
     {
-        Properties properties = new Properties();
-
+        Properties prop = new Properties();
         try (FileInputStream fs = new FileInputStream("C:\\Users\\gfeli\\IdeaProjects\\projeto-jdbc\\src\\entities\\db.properties")) {
-            properties.load(fs);
-            return properties;
-
+            prop.load(fs);
+            return prop;
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);

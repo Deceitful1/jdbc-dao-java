@@ -3,18 +3,22 @@ import entities.Seller;
 import model.dao.DaoFactory;
 import model.dao.SellerDao;
 
+import java.sql.Connection;
 import java.util.Date;
 
 public class Main
 {
     public static void main(String[] args)
     {
+        Connection conn = null;
+        DB.getConnection();
+
         Department dp = new Department(1,"Books");
 
-        Seller seller = new Seller(1,"joseph","joseph@gmail.com",new Date(),1200.00,dp);
+        SellerDao sellerDao = DaoFactory.createSellerDao();
+        Seller seller = sellerDao.findById(3);
         System.out.println(seller);
 
-        SellerDao sellerDao = DaoFactory.createSellerDao();
 
     }
 }

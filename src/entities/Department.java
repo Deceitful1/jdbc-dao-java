@@ -13,7 +13,6 @@ public class Department implements Serializable
 
     private Integer id;
     private String name;
-    private List<Seller> sellers;
 
     public Department(Integer id, String name)
     {

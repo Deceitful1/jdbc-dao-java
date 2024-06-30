@@ -16,7 +16,9 @@ public class Main
         Department dp = new Department(1,"Books");
 
         SellerDao sellerDao = DaoFactory.createSellerDao();
+        System.out.println("=== test 1: findById ====");
         Seller seller = sellerDao.findById(3);
+        sellerDao.insert(seller);
         System.out.println(seller);
 
 

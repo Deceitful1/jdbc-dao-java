@@ -26,5 +26,8 @@ public class Main
         for (Seller obj : sellers) {
             System.out.println(obj);
         }
+        System.out.println("------------------------------");
+        List<Seller> sellers1 = sellerDao.findAll();
+        sellers1.forEach(System.out::println);
     }
 }

@@ -19,6 +19,9 @@ public class Main
         SellerDaoJDBC sellerDao = (SellerDaoJDBC) DaoFactory.createSellerDao();
         System.out.println("=== test 1: findById ====");
         Seller seller = sellerDao.findById(3);
+        seller.setName("loos");
+        sellerDao.update(seller);
+        sellerDao.deleteById(20);
         sellerDao.insert(new Seller(null,"greg","greg@gmail.com",new Date(),4000.0,dp));
         System.out.println(seller);
 

@@ -1,14 +1,12 @@
 package model.dao.impl;
 
+import entities.DB;
 import entities.Dbexception;
 import entities.Department;
 import entities.Seller;
 import model.dao.SellerDao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,11 +26,10 @@ public class SellerDaoJDBC implements SellerDao
     public void insert(Seller seller)
     {
         PreparedStatement ps = null;
-        ResultSet rs = null;
+
         try {
-            conn.setAutoCommit(false);
-            ps = conn.prepareStatement("INSERT INTO seller (Name,Email,BirthDate,BaseSalary,DepartmentId " +
-                    "VALUES (?,?,?,?,?) ", PreparedStatement.RETURN_GENERATED_KEYS);
+            ps = conn.prepareStatement("INSERT INTO seller(Name,Email,BirthDate,BaseSalary,DepartmentId)" +
+                    "VALUES (?,?,?,?,?) ", Statement.RETURN_GENERATED_KEYS);
 
             ps.setString(1, seller.getName());
             ps.setString(2, seller.getEmail());
@@ -43,18 +40,22 @@ public class SellerDaoJDBC implements SellerDao
             int rowsAffected = ps.executeUpdate();
 
             if (rowsAffected > 0) {
-                System.out.println("done!  rows affected: " + rowsAffected);
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next())
+                {
+                    int id = rs.getInt(1);
+                    seller.setId(id);
+                }
+                DB.closeResultSet(rs);
+            }
+            else {
+            throw new Dbexception("nenhuma linha foi afetada");
             }
 
 
-            conn.commit();
 
         } catch (SQLException e) {
-            try {
-                conn.rollback();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
+            System.out.println(e.getMessage());
         }
 
     }
